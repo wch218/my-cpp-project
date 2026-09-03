@@ -1,0 +1,25 @@
+{
+  "name": "C++ Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "context": ".",
+  "workspaceFolder": "/work",
+  "remoteUser": "dev",
+  "features": {},
+  "postCreateCommand": "bash -lc 'python3 -m pip install --user conan || true; echo \"export PATH=\\\"$HOME/.local/bin:$PATH\\\"\" >> ~/.profile || true'",
+  "forwardPorts": [],
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/work,type=bind,consistency=cached"
+  ],
+  "extensions": [
+    "ms-vscode.cpptools",
+    "ms-vscode.cmake-tools",
+    "ms-vscode.cpptools-extension-pack",
+    "ms-vscode.cpptools-themes",
+    "ms-vscode.cmake",
+    "ms-vscode-remote.remote-containers",
+    "ms-vscodecpptools"
+  ]
+}

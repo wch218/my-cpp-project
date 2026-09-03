@@ -1,0 +1,61 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ${{ runner.os }}-ccache-${{ hashFiles('**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential cmake ninja-build pkg-config valgrind python3-pip libssl-dev libpq-dev libboost-all-dev
+
+      - name: Set compiler
+        run: |
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            sudo apt install -y clang
+            echo "Using clang"
+            export CC=clang
+            export CXX=clang++
+          else
+            echo "Using gcc"
+            export CC=gcc
+            export CXX=g++
+          fi
+        shell: bash
+
+      - name: Install Conan
+        run: python3 -m pip install --user conan
+
+      - name: Configure (CMake)
+        run: |
+          mkdir -p build
+          cd build
+          cmake -S .. -B . -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        env:
+          CC: ${{ env.CC }}
+          CXX: ${{ env.CXX }}
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure
