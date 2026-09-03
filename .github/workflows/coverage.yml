@@ -1,0 +1,66 @@
+name: Coverage
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential cmake ninja-build lcov pkg-config python3-pip
+          sudo apt install -y libssl-dev libcurl4-openssl-dev protobuf-compiler libprotobuf-dev
+
+      - name: Set compiler
+        run: |
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            sudo apt install -y clang
+            export CC=clang
+            export CXX=clang++
+          else
+            export CC=gcc
+            export CXX=g++
+          fi
+        shell: bash
+
+      - name: Configure (Coverage)
+        run: |
+          mkdir -p build
+          cd build
+          cmake -S .. -B . -G Ninja -DCMAKE_BUILD_TYPE=Coverage -DCMAKE_CXX_FLAGS="-g -O0 --coverage" -DCMAKE_C_FLAGS="-g -O0 --coverage"
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure || true
+
+      - name: Capture coverage
+        run: |
+          sudo lcov --directory build --capture --output-file coverage.info || true
+          sudo lcov --remove coverage.info '/usr/*' --output-file coverage.info || true
+          sudo lcov --list coverage.info || true
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-info-${{ matrix.compiler }}
+          path: coverage.info
+
+      - name: Upload to Codecov (optional)
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.info
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

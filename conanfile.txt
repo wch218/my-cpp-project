@@ -1,0 +1,8 @@
+# conanfile.txt - example dependencies for Conan
+[requires]
+fmt/9.1.0
+protobuf/3.21.12
+
+[generators]
+cmake_find_package
+cmake_paths
