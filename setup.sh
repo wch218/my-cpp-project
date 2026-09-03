@@ -1,11 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-# Enhanced Ubuntu C/C++ dev environment setup
+# Enhanced Ubuntu C/C++ dev environment setup (GCC-first)
 # Usage: chmod +x setup.sh && ./setup.sh
 # Optional environment variables:
 #  INSTALL_VCPKG=1      - bootstrap vcpkg into $HOME/vcpkg
-#  INSTALL_SYS_PKGS=1   - install extra system libraries (libssl-dev, libpq-dev, libboost-dev)
+#  INSTALL_SYS_PKGS=1   - install extra system libraries (libssl-dev, libpq-dev, libcurl4-openssl-dev, protobuf)
 #  VCPKG_ROOT           - custom vcpkg path (default: $HOME/vcpkg)
 
 INSTALL_VCPKG=${INSTALL_VCPKG:-1}
@@ -15,17 +15,16 @@ VCPKG_ROOT=${VCPKG_ROOT:-$HOME/vcpkg}
 sudo apt update
 sudo apt upgrade -y
 
-# Basic build & dev tools
+# Basic build & dev tools (GCC-focused)
 sudo apt install -y build-essential git curl wget ca-certificates pkg-config \
-  cmake ninja-build gdb valgrind clang clang-tidy clang-format lldb \
-  autoconf automake libtool make ccache cppcheck strace ltrace python3-pip git-lfs
+  cmake ninja-build gdb valgrind autoconf automake libtool make ccache cppcheck strace ltrace python3-pip git-lfs
 
 # Optional helpful tools
 sudo apt install -y unzip zip
 
 # Optional system libraries commonly used by C/C++ projects
 if [ "${INSTALL_SYS_PKGS}" = "1" ]; then
-  sudo apt install -y libssl-dev libpq-dev libboost-all-dev
+  sudo apt install -y libssl-dev libpq-dev libboost-all-dev libcurl4-openssl-dev protobuf-compiler libprotobuf-dev
 fi
 
 # Install Conan (C/C++ package manager) for dependency management
@@ -34,8 +33,8 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Configure ccache for faster rebuilds (for bash shells)
 # Add variables only if not present
-grep -qxF 'export CC="ccache gcc"' ~/.profile || echo 'export CC="ccache gcc"' >> ~/.profile
-grep -qxF 'export CXX="ccache g++"' ~/.profile || echo 'export CXX="ccache g++"' >> ~/.profile
+grep -qxF 'export CC="gcc"' ~/.profile || echo 'export CC="gcc"' >> ~/.profile
+grep -qxF 'export CXX="g++"' ~/.profile || echo 'export CXX="g++"' >> ~/.profile
 grep -qxF 'export PATH="$HOME/.local/bin:$PATH"' ~/.profile || echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.profile
 
 # Bootstrap vcpkg (optional)

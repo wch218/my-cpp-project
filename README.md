@@ -1,3 +1,6 @@
+[![CI](https://github.com/wch218/my-cpp-project/actions/workflows/ci.yml/badge.svg)](https://github.com/wch218/my-cpp-project/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/github/license/wch218/my-cpp-project)](https://github.com/wch218/my-cpp-project/blob/main/LICENSE)
+
 # my-cpp-project
 
 A minimal C/C++ starter project with CMake, GoogleTest, Docker, VS Code devcontainer and GitHub Actions CI.
@@ -43,7 +46,7 @@ Run an interactive shell with your project mounted:
 
 ## VS Code devcontainer
 
-Open this folder in VS Code and use Remote-Containers: "Open Folder in Container". The devcontainer is configured in `.devcontainer/devcontainer.json`.
+Open this folder in VS Code and use Remote-Containers: "Open Folder in Container". The devcontainer is configured in `.devcontainer/devcontainer.json` and uses a prebuilt Microsoft devcontainer image for C++ (Ubuntu 22.04).
 
 ## CI
 

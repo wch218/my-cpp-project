@@ -26,7 +26,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt update
-          sudo apt install -y build-essential cmake ninja-build pkg-config valgrind python3-pip libssl-dev libpq-dev libboost-all-dev
+          sudo apt install -y build-essential cmake ninja-build pkg-config valgrind python3-pip libssl-dev libpq-dev libboost-all-dev libcurl4-openssl-dev protobuf-compiler libprotobuf-dev
 
       - name: Set compiler
         run: |

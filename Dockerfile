@@ -1,4 +1,4 @@
-# Dockerfile - Ubuntu-based C/C++ development image with vcpkg
+# Dockerfile - Ubuntu-based C/C++ development image (GCC-focused)
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -10,8 +10,8 @@ ARG VCPKG_ROOT=/home/dev/vcpkg
 RUN apt update && apt upgrade -y \
   && apt install -y --no-install-recommends \
     build-essential git curl wget ca-certificates pkg-config cmake ninja-build \
-    gdb valgrind clang clang-tidy clang-format lldb autoconf automake libtool \
-    make ccache cppcheck strace ltrace python3-pip unzip zip sudo git-lfs libssl-dev libpq-dev libboost-all-dev \
+    gdb valgrind autoconf automake libtool make ccache cppcheck strace ltrace python3-pip unzip zip sudo git-lfs \
+    libssl-dev libpq-dev libboost-all-dev libcurl4-openssl-dev protobuf-compiler libprotobuf-dev \
   && rm -rf /var/lib/apt/lists/*
 
 # add non-root user

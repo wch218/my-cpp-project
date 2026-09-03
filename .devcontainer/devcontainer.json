@@ -1,12 +1,8 @@
 {
-  "name": "C++ Dev Container",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": "."
-  },
-  "context": ".",
+  "name": "C++ Dev Container (prebuilt image)",
+  "image": "mcr.microsoft.com/vscode/devcontainers/cpp:0-ubuntu-22.04",
   "workspaceFolder": "/work",
-  "remoteUser": "dev",
+  "remoteUser": "vscode",
   "features": {},
   "postCreateCommand": "bash -lc 'python3 -m pip install --user conan || true; echo \"export PATH=\\\"$HOME/.local/bin:$PATH\\\"\" >> ~/.profile || true'",
   "forwardPorts": [],
@@ -16,10 +12,6 @@
   "extensions": [
     "ms-vscode.cpptools",
     "ms-vscode.cmake-tools",
-    "ms-vscode.cpptools-extension-pack",
-    "ms-vscode.cpptools-themes",
-    "ms-vscode.cmake",
-    "ms-vscode-remote.remote-containers",
-    "ms-vscodecpptools"
+    "ms-vscode-remote.remote-containers"
   ]
 }

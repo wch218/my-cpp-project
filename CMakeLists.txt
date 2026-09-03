@@ -9,6 +9,11 @@ option(BUILD_TESTING "Build tests" ON)
 
 add_subdirectory(src)
 
+# optional examples
+if(EXISTS ${CMAKE_SOURCE_DIR}/examples)
+  add_subdirectory(examples)
+endif()
+
 if(BUILD_TESTING)
   enable_testing()
   add_subdirectory(tests)
